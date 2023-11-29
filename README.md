@@ -17,13 +17,9 @@ A small back-end project made with django
 ```sh
       pip install -r requirements.txt
  ```
-5. roam to my_site folder
+5. start the application
 ```sh
-      cd my_site
- ```
-6. start the application
-```sh
-      python manage.py runserver
+      flask run
  ```
 
 ### You are ready to go
