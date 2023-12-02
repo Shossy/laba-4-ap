@@ -15,3 +15,12 @@ class BasketItem(db.Model):
 
     def __repr__(self):
         return f"<BasketItem {self.product.name} - Quantity: {self.quantity}>"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'product': self.product.serialize(),  # Serialize the associated product
+            'user_id': self.user_id,
+            'quantity': self.quantity,
+            'added_at': self.added_at.isoformat()  # Serialize the datetime to a string
+        }

@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-
+from flask_login import LoginManager
 # Create the Flask application
 app = Flask(__name__)
 
@@ -15,16 +15,19 @@ bcrypt = Bcrypt(app)
 
 db = SQLAlchemy(app)
 
+# Initialize Flask-Login
+login_manager = LoginManager(app)
+
 from app.models import User, Product, BasketItem
 
 # Import and register blueprints (routes)
-# from app.routes.product_routes import product_bp
-# from app.routes.order_routes import order_bp
-# from app.routes.user_routes import user_bp
+from app.routes.baskets import bp as basket_bp
+from app.routes.users import bp as user_bp
+from app.routes.products import bp as product_bp
 
-# app.register_blueprint(product_bp, url_prefix='/api/products')
-# app.register_blueprint(order_bp, url_prefix='/api/orders')
-# app.register_blueprint(user_bp, url_prefix='/api/users')
+app.register_blueprint(basket_bp, url_prefix='/api/basket')
+app.register_blueprint(product_bp, url_prefix='/api/products')
+app.register_blueprint(user_bp, url_prefix='/api/user')
 
 
 if __name__ == "__main__":

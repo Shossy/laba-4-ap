@@ -6,7 +6,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)  # The hashed password will be stored
 
-    basket_items = db.relationship('BasketItem', backref='user', lazy=True, cascade='all, delete-orphan')
+    # basket_items = db.relationship('BasketItem', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -19,6 +19,18 @@ class User(db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
 
+    def __init__(self, user_id, is_active=True):
+        self.id = user_id
+        self.is_active = is_active
 
+    def is_authenticated(self):
+        return True
 
+    def is_active(self):
+        return self.is_active
 
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
