@@ -19,8 +19,7 @@ class User(db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
 
-    def __init__(self, user_id, is_active=True):
-        self.id = user_id
+    def __init__(self, is_active=True):
         self.is_active = is_active
 
     def is_authenticated(self):
