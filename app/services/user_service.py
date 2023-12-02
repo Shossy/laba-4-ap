@@ -12,7 +12,8 @@ def register_user(username, password):
         raise ValueError('Username already taken. Please choose another one.')
 
     # Create a new user
-    new_user = User(username=username)
+    new_user = User()
+    new_user.username = username
     new_user.set_password(password)
 
     # Save the user to the database
@@ -25,6 +26,7 @@ def register_user(username, password):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
 
 def login(username, password):
     # Check if user exists
