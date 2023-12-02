@@ -1,7 +1,7 @@
 # laba-4-ap
 
 ## About
-A small back-end project made with django
+A small back-end project made with flask
 
 ## How to set up
 1. open cmd.exe in desired location
