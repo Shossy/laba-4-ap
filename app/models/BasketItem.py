@@ -11,7 +11,7 @@ class BasketItem(db.Model):
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     product = db.relationship('Product', backref=db.backref('basket_items', lazy=True))
-    user = db.relationship('User', backref=db.backref('basket_items', lazy=True))
+    # user = db.relationship('User', backref=db.backref('basket_items', lazy=True))
 
     def __repr__(self):
         return f"<BasketItem {self.product.name} - Quantity: {self.quantity}>"

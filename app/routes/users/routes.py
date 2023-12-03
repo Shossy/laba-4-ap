@@ -1,9 +1,9 @@
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app.routes.users import bp
 from flask import request, jsonify
 
-from app.services.user_service import register_user, login, logout
+from app.services.user_service import register_user, login, logout, delete_user
 
 
 @bp.route('/login/', methods=['POST'])
@@ -51,3 +51,10 @@ def register():
 def logout_user():
     logout()
     return jsonify({"message": "Successfully logged out"})
+
+
+@bp.route('/delete/', methods=['delete'])
+@login_required
+def delete():
+    delete_user(current_user)
+    return jsonify({"message": "Deleted"})
