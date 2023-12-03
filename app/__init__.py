@@ -17,7 +17,6 @@ bcrypt = Bcrypt(app)
 
 db = SQLAlchemy(app)
 
-
 # Initialize Flask-Login
 login_manager = LoginManager(app)
 
@@ -31,8 +30,6 @@ from app.routes.products import bp as product_bp
 app.register_blueprint(basket_bp, url_prefix='/api/basket')
 app.register_blueprint(product_bp, url_prefix='/api/products')
 app.register_blueprint(user_bp, url_prefix='/api/user')
-
-
 
 if __name__ == "__main__":
     # Run the application

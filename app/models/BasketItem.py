@@ -11,18 +11,17 @@ class BasketItem(db.Model):
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     product = db.relationship('Product', backref=db.backref('basket_items', lazy=True))
-    user = db.relationship('User', backref=db.backref('basket_items', lazy=True))
+    # user = db.relationship('User', backref=db.backref('basket_items', lazy=True))
 
     def __repr__(self):
-
         return f"<BasketItem {self.product.name} - Quantity: {self.quantity}>"
 
     def serialize(self):
         return {
             'id': self.id,
-            'product': self.product.serialize(),  # Serialize the associated product
             'user_id': self.user_id,
+            'product_id': self.product_id,
+            'product': self.product.serialize(),  # Serialize the associated product
             'quantity': self.quantity,
             'added_at': self.added_at.isoformat()  # Serialize the datetime to a string
         }
-

@@ -44,3 +44,8 @@ def login(username, password):
 
 def logout():
     logout_user()
+
+
+def delete_user(user):
+    db.session.delete(user)
+    db.session.commit()
