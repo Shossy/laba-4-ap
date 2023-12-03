@@ -1,7 +1,9 @@
+from flask_login import login_required, current_user
+
 from app.routes.users import bp
 from flask import request, jsonify
 
-from app.services.user_service import register_user, login, logout
+from app.services.user_service import register_user, login, logout, delete_user
 
 
 @bp.route('/login/', methods=['POST'])
@@ -18,7 +20,13 @@ def login_user():
         user = login(username, password)
         return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
     except Exception as e:
-        return jsonify({'error': str(e)}), 401
+        if str(e) == "User doesn't exist":
+            code = 404
+        elif str(e) == "Invalid password":
+            code = 401
+        else:
+            code = 400
+        return jsonify({'error': str(e)}), code
 
 
 @bp.route('/register/', methods=['POST'])
@@ -35,10 +43,18 @@ def register():
         new_user = register_user(username, password)
         return jsonify({'message': 'User registered successfully', 'user_id': new_user.id}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)}), 400
 
 
 @bp.route('/logout/', methods=['POST'])
+@login_required
 def logout_user():
     logout()
-    return jsonify({"message": " Successfuly logged out"})
+    return jsonify({"message": "Successfully logged out"})
+
+
+@bp.route('/delete/', methods=['delete'])
+@login_required
+def delete():
+    delete_user(current_user)
+    return jsonify({"message": "Deleted"})
