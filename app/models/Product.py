@@ -11,7 +11,6 @@ class Product(db.Model):
     def __repr__(self):
         return f"<Product {self.name}>"
 
-
     def serialize(self):
         return {
             'id': self.id,
@@ -20,4 +19,3 @@ class Product(db.Model):
             'price': self.price,
             'quantity': self.quantity
         }
-

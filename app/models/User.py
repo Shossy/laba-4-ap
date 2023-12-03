@@ -6,7 +6,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)  # The hashed password will be stored
 
-    basket_items = db.relationship('BasketItem', backref='user', cascade='all, delete-orphan')
+    basket_items = db.relationship('BasketItem', backref='user')
 
     def __repr__(self):
         return f"<User {self.username}>"
