@@ -1,3 +1,5 @@
+from flask_login import login_required
+
 from app.routes.users import bp
 from flask import request, jsonify
 
@@ -39,6 +41,7 @@ def register():
 
 
 @bp.route('/logout/', methods=['POST'])
+@login_required
 def logout_user():
     logout()
     return jsonify({"message": " Successfuly logged out"})
