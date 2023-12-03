@@ -20,7 +20,13 @@ def login_user():
         user = login(username, password)
         return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
     except Exception as e:
-        return jsonify({'error': str(e)}), 401
+        if str(e) == "User doesn't exist":
+            code = 404
+        elif str(e) == "Invalid password":
+            code = 401
+        else:
+            code = 400
+        return jsonify({'error': str(e)}), code
 
 
 @bp.route('/register/', methods=['POST'])
@@ -37,11 +43,11 @@ def register():
         new_user = register_user(username, password)
         return jsonify({'message': 'User registered successfully', 'user_id': new_user.id}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)}), 400
 
 
 @bp.route('/logout/', methods=['POST'])
 @login_required
 def logout_user():
     logout()
-    return jsonify({"message": " Successfuly logged out"})
+    return jsonify({"message": "Successfully logged out"})
