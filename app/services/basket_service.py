@@ -7,7 +7,7 @@ from app.models.User import User
 
 
 def get_basket(user):
-    basket_items = BasketItem.query.filter_by(user_id=user.id).all()
+    basket_items = user.basket_items
     return basket_items
 
 
@@ -65,8 +65,15 @@ def pay_for_order(user):
             shortage.append(item.product.name)
         else:
             item.product.quantity -= item.quantity
-            db.session.delete(item)
 
     if shortage:
         raise ValueError("We have shortage of " + ', '.join(name for name in shortage))
+    clear_basket_from_items(user)
+    db.session.commit()
+
+
+def clear_basket_from_items(user):
+    basket = get_basket(user)
+    for item in basket:
+        db.session.delete(item)
     db.session.commit()

@@ -3,7 +3,26 @@ from flask_login import login_required, current_user
 from app.routes.users import bp
 from flask import request, jsonify
 
-from app.services.user_service import register_user, login, logout, delete_user
+from app.services.user_service import register_user, login, logout, delete_user, user_update
+
+
+@bp.route('/', methods=['GET', 'PUT'])
+@login_required
+def user():
+    if request.method == 'GET':
+        return jsonify(current_user.serialize())
+    else:
+        data = request.get_json()
+        if not data or 'username' not in data or 'password' not in data:
+            return jsonify({'error': 'Invalid request. Please provide a username and password.'}), 400
+        username = data['username']
+        password = data['password']
+
+        try:
+            user_update(current_user, username, password)
+            return jsonify({'message': 'successfully updated'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
 
 
 @bp.route('/login/', methods=['POST'])

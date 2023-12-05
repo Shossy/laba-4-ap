@@ -19,7 +19,24 @@ paths:
                   $ref: '#/components/schemas/Product'
         '500':
           description: Server error
-    
+  /api/products/create:
+    post:
+      summary: Create product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      tags:
+        - Products
+      responses:
+        '201':
+          description: Created an user
+        '400':
+          description: Bad request
+        '500':
+          description: Server error
   /api/products/{product_id}:
     get:
       summary: Get details of a product
@@ -41,7 +58,7 @@ paths:
                 $ref: '#/components/schemas/Product'
         '404':
           description: Product not found
-
+          
         '500':
           description: Server error
     put:
@@ -92,6 +109,7 @@ paths:
               description: Product not found
             '500':
               description: Server error
+        
                 
                 
 #Users
@@ -106,7 +124,12 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/UserLoggedDTO'
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
           '401':
             description: Unathorized
           '500':
@@ -120,7 +143,12 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UserDTO"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
         '200':
           description: Success
@@ -140,7 +168,12 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UserDTO"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
         '201':
           description: Message of success
@@ -161,7 +194,12 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UserDTO"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       tags:
         - User
       responses:
@@ -242,7 +280,12 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/BasketItemDTO"
+              type: object
+              properties:
+                product_id:
+                  type: string
+                quantity:
+                  type: string
       responses:
           '201':
             description: Successfully added
@@ -264,7 +307,12 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/BasketItemDTO"
+              type: object
+              properties:
+                product_id:
+                  type: string
+                quantity:
+                  type: string
       responses:
           '201':
             description: Successfully removed
@@ -312,13 +360,6 @@ components:
           format: date-time
         product:
             $ref: '#/components/schemas/Product'
-    BasketItemDTO:
-      type: object
-      properties:
-        product_id:
-          type: integer
-        quantity:
-          type: integer
 
     User:
       type: object
@@ -328,20 +369,6 @@ components:
         username:
           type: string
         password: 
-          type: string
-    
-    UserLoggedDTO:
-      type: object
-      properties:
-        username:
-          type: string
-          
-    UserDTO:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
           type: string
           
     Product:

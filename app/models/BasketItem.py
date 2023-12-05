@@ -3,6 +3,8 @@ from datetime import datetime
 
 
 class BasketItem(db.Model):
+    __tablename__ = 'basket_item'
+
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id', ondelete='CASCADE', onupdate='CASCADE'),
                            nullable=False)
@@ -26,3 +28,7 @@ class BasketItem(db.Model):
             'quantity': self.quantity,
             'added_at': self.added_at.isoformat()  # Serialize the datetime to a string
         }
+
+    class Meta:
+        alternative_table_name = 'custom_basket_items'
+        default_order = 'added_at ASC'  # Сортування за замовчуванням, наприклад, за датою у зворотньому порядку

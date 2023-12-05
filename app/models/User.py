@@ -2,6 +2,8 @@ from app import db, bcrypt
 
 
 class User(db.Model):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)  # The hashed password will be stored
@@ -10,6 +12,17 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.username}>"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username
+        }
+
+    class Meta:
+        alternative_table_name = 'custom_users'
+        default_order = 'username ASC'
+
 
     # Example method to hash a password
     def set_password(self, password):

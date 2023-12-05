@@ -12,7 +12,7 @@ def get():
     return jsonify(basket_items_serialized)
 
 
-@bp.route('/add_item/',  methods=['POST'])
+@bp.route('/add_item/', methods=['POST'])
 @login_required
 def add_item():
     data = request.get_json()
@@ -55,3 +55,12 @@ def pay():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+@bp.route('/clear_basket/', methods=["DELETE"])
+@login_required
+def clear_basket():
+    try:
+        pay_for_order(current_user)
+        return jsonify({'message': 'Payment done successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
