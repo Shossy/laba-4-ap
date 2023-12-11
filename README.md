@@ -11,7 +11,7 @@ A small back-end project made with flask
  ```
 3. activate it
 ```sh
-      python <name-of-venv>/Scripts/activate
+      <name-of-venv>/Scripts/activate
  ```
 4. install required dependencies
 ```sh

@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.routes.users import bp
 from flask import request, jsonify
 
+from app.services.user_service import user_update, login, register_user, logout, delete_user
 
 
 @bp.route('/', methods=['GET', 'PUT'])
