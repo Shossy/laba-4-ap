@@ -6,8 +6,7 @@ from app.models.BasketItem import BasketItem
 from app.models.Product import Product
 from app.models.User import User
 from flask_login import login_user
-from app.services.basket_service import add_item_to_basket, get_basket, remove_item_from_basket, pay_for_order, \
-    clear_basket_from_items
+
 
 
 class TestBasketEndpoints(unittest.TestCase):
@@ -74,7 +73,7 @@ class TestBasketEndpoints(unittest.TestCase):
                         expected_response = {'message': 'Item added to basket successfully'}
                         self.assertEqual(response.get_json(), expected_response)
 
-    def test_remove_item_from_basket(self):
+    def test_update_item(self):
         with app.test_request_context():
             u = User()
             u.id = 1
@@ -96,12 +95,12 @@ class TestBasketEndpoints(unittest.TestCase):
                         mock_db_session.commit.return_value = None
 
                         # Make a request to the endpoint
-                        response = self.client.post('/api/basket/remove_item',
+                        response = self.client.post('/api/basket/update_item',
                                                     json={'product_id': 1, 'quantity': 2})
 
                         # Assert the expected response
                         self.assertEqual(response.status_code, 201)
-                        expected_response = {'message': 'Items removed from basket successfully'}
+                        expected_response = {'message': 'Item updated successfully'}
                         self.assertEqual(response.get_json(), expected_response)
 
     def test_pay_for_order(self):

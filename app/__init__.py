@@ -9,12 +9,13 @@ from flask_admin import Admin, AdminIndexView
 
 from flask_swagger_ui import get_swaggerui_blueprint
 
+import requests
+
 # Create the Flask application
 app = Flask(__name__)
 
 # Load configuration from config.py
 app.config.from_object('app.config.Config')
-
 
 SWAGGER_URL = '/swagger'
 API_URL = '/docs/swagger'
@@ -25,9 +26,12 @@ swagger_ui_blueprint = get_swaggerui_blueprint(
         "app_name": "store_ap"
     }
 )
+
+
 @app.route('/docs/swagger')
 def docs():
     return send_file('openapi.json', mimetype='application/json')
+
 
 # Initialize the SQLAlchemy database
 
@@ -54,6 +58,7 @@ app.register_blueprint(product_bp, url_prefix='/api/products')
 app.register_blueprint(user_bp, url_prefix='/api/user')
 app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
+
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
         # Customize the access control logic based on your requirements
@@ -78,27 +83,48 @@ admin.add_view(AuthModelView(User, db.session, name='Users'))
 admin.add_view(AuthModelView(Product, db.session, name='Products'))
 
 
-@app.route('/login/', methods=['GET', 'POST'])
-def log_user():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        try:
-            login(username, password)
-            if current_user.admin:
-                return redirect(url_for('admin.index'))
-            else:
-                raise ValueError("User is not admin")
-        except Exception as e:
-            if str(e) == "User doesn't exist":
-                code = 404
-            elif str(e) == "Invalid password":
-                code = 401
-            else:
-                code = 400
-            return render_template('login.html', error=str(e)), code
+@app.route('/', methods=['GET'])
+def index():
+    api_url = 'http://127.0.0.1:5000/api/products/'
+    response = requests.get(api_url)
+    print(response)
 
-    return render_template('login.html')
+    if response.status_code == 200:
+        products = response.json()
+    else:
+        # Handle the error, e.g., by setting products to an empty list
+        products = []
+
+    return render_template('index.html', products=products['products'])
+
+
+@app.route('/cart/', methods=['GET'])
+def cart():
+    return render_template('cart.html')
+
+
+# @app.route('/basket', methods=['GET'])
+# def index():
+#     api_url = 'http://127.0.0.1:5000/api/basket/get_basket'
+#     response = requests.get(api_url)
+#
+#     if response.status_code == 200:
+#         products = response.json()
+#     else:
+#         # Handle the error, e.g., by setting products to an empty list
+#         products = []
+#
+#     return render_template('index.html', products=products['products'])
+
+
+@app.route('/login/', methods=['GET'])
+def log():
+    return render_template('new login.html')
+
+
+@app.route('/register/', methods=['GET'])
+def reg():
+    return render_template('register.html')
 
 
 @app.route('/logout/', methods=['GET'])

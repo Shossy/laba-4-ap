@@ -1,0 +1,73 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Product List</h1>
+
+{% if products %}
+{% for product in products %}
+<div class="product">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+    <p>Price: ${{ product.price }}</p>
+    <p>Available quantity: {{ product.quantity }}</p>
+    <label for="quantity_{{ product.id }}">Quantity:</label>
+    <input type="number" id="quantity_{{ product.id }}" value="1" min="1">
+    <button onclick="addToCart('{{ product.id }}')">Add to Cart</button>
+</div>
+{% endfor %}
+{% else %}
+<p>No products available.</p>
+{% endif %}
+</body>
+
+<script>
+    function addToCart(productId) {
+        // You can use JavaScript to send an AJAX request to your API
+        // Here, we'll just log the product ID to the console as an example
+        console.log('Add to Cart clicked for product ID:', productId);
+        var quantityInput = document.getElementById('quantity_' + productId);
+        var quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+        // You can use the Fetch API or other libraries like Axios to send a request to your API
+        // Example using Fetch API:
+        fetch('/api/basket/add_item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({product_id: productId, quantity: quantity}),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                else if (response.status === 401){
+                    window.location.href = '/login'
+                }
+            })
+            .then(data => console.log('Response from API:', data))
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</html>

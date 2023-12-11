@@ -352,9 +352,9 @@
         }
       }
     },
-    "/api/basket/remove_item": {
+    "/api/basket/update_item": {
       "post": {
-        "summary": "Remove quantity of item",
+        "summary": "Update quantity of item",
         "tags": [
           "Basket"
         ],
@@ -378,7 +378,7 @@
         },
         "responses": {
           "201": {
-            "description": "Successfully removed"
+            "description": "Successfully updated"
           },
           "400": {
             "description": "Bad request"

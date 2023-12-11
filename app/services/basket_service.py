@@ -5,7 +5,6 @@ from app.models.BasketItem import BasketItem
 from app.models.Product import Product
 
 
-
 def get_basket(user):
     basket_items = user.basket_items
     return basket_items
@@ -18,12 +17,13 @@ def add_item_to_basket(user, product_id, quantity):
         raise ValueError('Product not found.')
 
     # Check if the quantity is valid
-    if product.quantity - int(quantity) < 0 or product.quantity - int(quantity) >= product.quantity:
+    if product.quantity - int(quantity) < 0 or int(quantity) <= 0:
         raise ValueError('Invalid quantity.')
-
     # Check if the user already has the product in the basket
     existing_item = BasketItem.query.filter_by(user_id=user.id, product_id=product_id).first()
     if existing_item:
+        if product.quantity - int(quantity) - existing_item.quantity < 0:
+            raise ValueError('Invalid quantity.')
         existing_item.quantity += int(quantity)
     else:
         new_item = BasketItem(user_id=user.id, product_id=product_id, quantity=quantity)
@@ -33,7 +33,7 @@ def add_item_to_basket(user, product_id, quantity):
     db.session.commit()
 
 
-def remove_item_from_basket(user, product_id, quantity):
+def update_quantity(user, product_id, quantity):
     # Check if the product exists
     product = Product.query.get(product_id)
     if not product:
@@ -44,12 +44,12 @@ def remove_item_from_basket(user, product_id, quantity):
     # Check if the user already has the product in the basket
     existing_item = BasketItem.query.filter_by(user_id=user.id, product_id=product_id).first()
     if existing_item:
-        if existing_item.quantity == int(quantity):
+        if int(quantity) == 0:
             db.session.delete(existing_item)
-        elif existing_item.quantity - int(quantity) > 0 and int(quantity) >= 0:
-            existing_item.quantity -= int(quantity)
+        elif int(quantity) > existing_item.product.quantity:
+            raise ValueError("Invalid quantity")
         else:
-            raise ValueError('Invalid quantity.')
+            existing_item.quantity = int(quantity)
     else:
         raise ValueError("You don't have this item in basket")
 

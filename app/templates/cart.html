@@ -1,0 +1,210 @@
+<!-- templates/cart.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .cart-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .checkout-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .discard-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #bb031a;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+
+<h1>Shopping Cart</h1>
+<div id="cart-container"></div>
+<!-- Other HTML content -->
+
+</body>
+<!-- Add this script section at the end of your HTML body -->
+<script>
+    // Assuming you have already fetched and populated the cart_items array
+    var cart_items
+
+
+
+    // Function to render cart items
+    function renderCartItems() {
+        var cartContainer = document.getElementById('cart-container');
+
+        // Clear existing content
+        cartContainer.innerHTML = '';
+
+        // Check if cart_items is defined
+        if (cart_items && cart_items.length > 0) {
+            // Iterate through cart_items and generate HTML for each item
+            cart_items.map(item => {
+                var cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+
+                // Generate HTML for each item
+                cartItemDiv.innerHTML = `
+                    <h2>${item.product.name}</h2>
+                    <p>Quantity:
+                        <button onclick="decreaseQuantity(${item.id})">-</button>
+                        ${item.quantity}
+                        <button onclick="increaseQuantity(${item.id})">+</button>
+                    </p>
+                    <p>Price per item: $${item.product.price}</p>
+                    <p>Total: $${item.quantity * item.product.price}</p>
+                    <button onclick="Save(${item.product_id}, ${item.quantity})">Save</button>
+                `;
+
+                // Append the cart item to the container
+                cartContainer.appendChild(cartItemDiv);
+            });
+            var buttonContainerPay = document.createElement('div');
+            var buttonContainerClear = document.createElement('div');
+            buttonContainerPay.innerHTML = '<button class="checkout-button" onClick="Pay()">Pay</button>';
+            cartContainer.appendChild(buttonContainerPay)
+            buttonContainerClear.innerHTML = '<button class="discard-button" onClick="clearBasket()">Clear</button>';
+            cartContainer.appendChild(buttonContainerClear)
+        } else {
+            // Display a message if the cart is empty
+            cartContainer.innerHTML = `
+            <p>Your shopping cart is empty.</p>
+
+            `;
+        }
+    }
+
+    // Function to increase quantity
+    function increaseQuantity(itemId) {
+        // Find the item in the cart_items array
+        var item = cart_items.find(item => item.id === itemId);
+
+        // Increase the quantity
+        if (item && item.product.quantity > item.quantity) {
+            item.quantity++;
+            renderCartItems(); // Update the UI
+        }
+    }
+
+    // Function to decrease quantity
+    function decreaseQuantity(itemId) {
+        // Find the item in the cart_items array
+        var item = cart_items.find(item => item.id === itemId);
+
+        // Decrease the quantity, but not below 1
+        if (item && item.quantity > 0) {
+            item.quantity--;
+            renderCartItems(); // Update the UI
+        }
+
+    }
+
+    function getBasket() {
+
+        return fetch('/api/basket/', {
+            method: 'GET',
+            headers: {
+                // You can add headers if needed, e.g., for authentication
+                'Content-Type': 'application/json',
+                // Add any other headers as needed
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else if (response.status === 401) {
+                    window.location.href = '/login'
+                }
+            })
+            .then(data => {
+                cart_items = data
+                console.log('Response from API:', data)
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function Save(productId, quantity) {
+        fetch('/api/basket/update_item', {
+            method: 'POST',
+            headers: {
+                // You can add headers if needed, e.g., for authentication
+                'Content-Type': 'application/json',
+                // Add any other headers as needed
+            },
+            body: JSON.stringify({product_id: productId, quantity: quantity})
+        }).then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                getBasket().then(() => renderCartItems())
+            });
+
+    }
+
+    function Pay() {
+        fetch('/api/basket/pay', {
+            method: 'POST',
+            headers: {
+                // You can add headers if needed, e.g., for authentication
+                'Content-Type': 'application/json',
+                // Add any other headers as needed
+            },
+        }).then(response => {
+            return response.json()
+        })
+            .then(result => {
+
+                alert(JSON.stringify(result))
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                getBasket().then(() => renderCartItems())
+            });
+    }
+    function clearBasket() {
+        fetch('/api/basket/clear_basket', {
+            method: 'DELETE',
+            headers: {
+                // You can add headers if needed, e.g., for authentication
+                'Content-Type': 'application/json',
+                // Add any other headers as needed
+            },
+        }).then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                getBasket().then(() => renderCartItems())
+            });
+    }
+
+    // Call the function to render cart items
+    getBasket().then(() => renderCartItems());
+</script>
+
+</html>
