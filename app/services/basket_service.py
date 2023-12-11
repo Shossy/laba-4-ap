@@ -3,7 +3,7 @@
 from app import db
 from app.models.BasketItem import BasketItem
 from app.models.Product import Product
-from app.models.User import User
+
 
 
 def get_basket(user):
@@ -67,7 +67,7 @@ def pay_for_order(user):
             item.product.quantity -= item.quantity
 
     if shortage:
-        raise ValueError("We have shortage of " + ', '.join(name for name in shortage))
+        raise ValueError("We have shortage of " + ', '.join(name for name in shortage) + ". Please adjust")
     clear_basket_from_items(user)
     db.session.commit()
 

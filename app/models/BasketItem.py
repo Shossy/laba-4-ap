@@ -12,12 +12,8 @@ class BasketItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    product = db.relationship('Product', backref=db.backref('basket_items', lazy=True))
-
-    # user = db.relationship('User', backref=db.backref('basket_items', lazy=True))
-
     def __repr__(self):
-        return f"<BasketItem {self.product.name} - Quantity: {self.quantity}>"
+        return f"<BasketItem {self.product_id} - Quantity: {self.quantity}>"
 
     def serialize(self):
         return {
@@ -28,7 +24,3 @@ class BasketItem(db.Model):
             'quantity': self.quantity,
             'added_at': self.added_at.isoformat()  # Serialize the datetime to a string
         }
-
-    class Meta:
-        alternative_table_name = 'custom_basket_items'
-        default_order = 'added_at ASC'  # Сортування за замовчуванням, наприклад, за датою у зворотньому порядку

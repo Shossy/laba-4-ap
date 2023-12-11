@@ -10,6 +10,8 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
+    basket_items = db.relationship('BasketItem', backref='product', cascade='all, delete-orphan')
+
     def __repr__(self):
         return f"<Product {self.name}>"
 
@@ -21,7 +23,3 @@ class Product(db.Model):
             'price': self.price,
             'quantity': self.quantity
         }
-
-    class Meta:
-        alternative_table_name = 'custom_products'
-        default_order = 'name ASC'
