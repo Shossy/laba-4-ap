@@ -3,7 +3,6 @@ from flask_login import login_required, current_user
 from app.routes.users import bp
 from flask import request, jsonify
 
-from app.services.user_service import register_user, login, logout, delete_user, user_update
 
 
 @bp.route('/', methods=['GET', 'PUT'])
@@ -17,6 +16,7 @@ def user():
             return jsonify({'error': 'Invalid request. Please provide a username and password.'}), 400
         username = data['username']
         password = data['password']
+
 
         try:
             user_update(current_user, username, password)
@@ -65,6 +65,7 @@ def register():
         return jsonify({'error': str(e)}), 400
 
 
+
 @bp.route('/logout', methods=['POST'])
 @login_required
 def logout_user():
@@ -77,3 +78,4 @@ def logout_user():
 def delete():
     delete_user(current_user)
     return jsonify({"message": "Deleted"}), 201
+

@@ -9,8 +9,10 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)  # The hashed password will be stored
     admin = db.Column(db.Boolean, default=False, nullable=False)
 
+
     basket_items = db.relationship('BasketItem', backref='user', order_by='BasketItem.added_at',
                                    cascade='all, delete-orphan')
+
 
     def __repr__(self):
         return f"<User {self.username}>"

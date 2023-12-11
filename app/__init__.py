@@ -127,10 +127,12 @@ def reg():
     return render_template('register.html')
 
 
+
 @app.route('/logout/', methods=['GET'])
 def lout_user():
     logout()
     return jsonify({'message': 'successfully logged out'}), 201
+
 
 
 if __name__ == "__main__":

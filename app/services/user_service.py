@@ -57,3 +57,4 @@ def logout():
 def delete_user(user):
     db.session.delete(user)
     db.session.commit()
+

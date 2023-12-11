@@ -12,8 +12,10 @@ class BasketItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
     def __repr__(self):
         return f"<BasketItem {self.product_id} - Quantity: {self.quantity}>"
+
 
     def serialize(self):
         return {
