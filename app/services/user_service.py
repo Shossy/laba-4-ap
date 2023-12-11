@@ -42,6 +42,14 @@ def login(username, password):
         raise ValueError("Invalid password")
 
 
+def user_update(user, username, password):
+    if User.query.filter_by(username=username).first():
+        raise ValueError("Username is already taken")
+    user.username = username
+    user.set_password(password)
+    db.session.commit()
+
+
 def logout():
     logout_user()
 
@@ -49,3 +57,4 @@ def logout():
 def delete_user(user):
     db.session.delete(user)
     db.session.commit()
+
