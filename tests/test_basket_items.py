@@ -95,7 +95,7 @@ class TestBasketEndpoints(unittest.TestCase):
                         mock_db_session.commit.return_value = None
 
                         # Make a request to the endpoint
-                        response = self.client.post('/api/basket/update_item',
+                        response = self.client.put('/api/basket/update_item',
                                                     json={'product_id': 1, 'quantity': 2})
 
                         # Assert the expected response

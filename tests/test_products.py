@@ -15,7 +15,7 @@ class TestProductEndpoints(unittest.TestCase):
             # Mock the Product.query.all() method
             with mock.patch('app.models.Product.Product.query') as mock_query_all:
                 # Set the return value for the mock
-                mock_query_all.all.return_value = [
+                mock_query_all.order_by.return_value.all.return_value = [
                     Product(id=1, name='Product 1', price=19.99, quantity=50),
                     Product(id=2, name='Product 2', price=29.99, quantity=50),
                 ]

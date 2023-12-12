@@ -43,10 +43,12 @@ def login(username, password):
 
 
 def user_update(user, username, password):
-    if User.query.filter_by(username=username).first():
+    u = User.query.get(user.id)
+    username_taken = User.query.filter_by(username=username).first()
+    if username_taken and username_taken.id != u.id:
         raise ValueError("Username is already taken")
-    user.username = username
-    user.set_password(password)
+    u.username = username
+    u.set_password(password)
     db.session.commit()
 
 

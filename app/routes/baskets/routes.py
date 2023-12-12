@@ -31,7 +31,7 @@ def add_item():
         return jsonify({'error': str(e)}), 400
 
 
-@bp.route('/update_item', methods=["POST"])
+@bp.route('/update_item', methods=["PUT"])
 def update_item():
     data = request.get_json()
 

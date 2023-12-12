@@ -66,7 +66,7 @@ class MyAdminIndexView(AdminIndexView):
 
     def inaccessible_callback(self, name, **kwargs):
         # Redirect to login page if not authenticated or not the admin user
-        return redirect(url_for('log_user'))
+        return redirect(url_for('log'))
 
 
 admin = Admin(app, name='Store', template_mode='bootstrap3', index_view=MyAdminIndexView())
@@ -81,6 +81,7 @@ class AuthModelView(ModelView):
 
 admin.add_view(AuthModelView(User, db.session, name='Users'))
 admin.add_view(AuthModelView(Product, db.session, name='Products'))
+
 
 
 @app.route('/', methods=['GET'])

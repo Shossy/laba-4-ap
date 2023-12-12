@@ -59,14 +59,15 @@
             body: JSON.stringify({product_id: productId, quantity: quantity}),
         })
             .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                else if (response.status === 401){
+                if (response.status === 401){
                     window.location.href = '/login'
                 }
+                return response.json()
             })
-            .then(data => console.log('Response from API:', data))
+            .then(data => {
+                alert(JSON.stringify(data))
+                console.log('Response from API:', data)
+            })
             .catch(error => console.error('Error:', error));
     }
 </script>

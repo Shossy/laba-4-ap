@@ -59,7 +59,7 @@ class TestUserEndpoints(unittest.TestCase):
             # Mock the database operations in user_service.user_update
             with mock.patch('app.models.User.User.query') as mock_user_query:
                 mock_user_query.filter_by.return_value.first.return_value = None
-
+                mock_user_query.get.return_value = u
                 with mock.patch('app.services.user_service.db.session') as mock_db_session:
                     # Set the return value for the mock
                     mock_db_session.commit.return_value = None

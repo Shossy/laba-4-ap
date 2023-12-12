@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 
 @bp.route('/', methods=['GET'])
 def get_products():
-    products = Product.query.all()
+    products = Product.query.order_by(Product.name).all()
     serialized_products = [product.serialize() for product in products]
     return jsonify(products=serialized_products)
 
